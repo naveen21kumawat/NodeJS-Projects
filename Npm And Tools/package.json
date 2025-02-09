@@ -1,0 +1,16 @@
+{
+  "name": "npm-test",
+  "version": "1.0.0",
+  "description": "test for npm",
+  "main": "App.js",
+  "scripts": {
+    "test": "npm-test",
+    "start": "nodemon App.js",
+    "run": "node App.js"
+  },
+  "author": "naveen",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
