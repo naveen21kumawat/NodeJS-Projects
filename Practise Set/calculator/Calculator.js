@@ -17,8 +17,6 @@ const CalcultorFile = (req, res) => {
     return res.end();
   } else if (req.url === "/calculator") {
     return requestHandler(req,res);
-    
-
   } else if (req.url === "/result" && req.method == "POST") {
    return sumRequestHandler(req,res);
   }
