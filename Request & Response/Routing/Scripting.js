@@ -15,6 +15,9 @@ app.use((req,res,next)=>{
 app.get('/',(req, res,next) => {
   res.send(' main page' );
 });
+app.get('/pro',(req, res,next) => {
+  return next(new Error('Not Implemented'));
+});
 
 app.use((req, res, err) => { 
   console.error('Error occurred:', err);
