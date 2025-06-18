@@ -10,8 +10,13 @@ app.set('view engine', 'ejs');
 // app.set(__dirname)
 
 
-app.get('/',(req,res)=>{
-  res.render("index");
+// app.get('/',(req,res)=>{
+//   res.render("index");
+
+// })
+
+app.get('/profile/:username/:age',(req,res)=>{
+  res.send(`Welcome, ${req.params.username} Age: ${req.params.age}`);
 
 })
 
