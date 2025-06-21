@@ -20,9 +20,9 @@ app.post('/create',(req,res)=>{
 //   console.log("chal jljd");
 //  })
 //   res.redirect('/'); 
-console.log("create page")
+console.log("New Data Added")
 fstat.writeFile(`./files/${req.body.title.split(' ').join('')}.txt`, req.body.content,(err)=>{
- 
+
 }
 )
   res.redirect('/');}
