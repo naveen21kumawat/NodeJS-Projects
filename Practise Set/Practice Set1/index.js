@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const path = require('path');
-const fstat = require('fs');
+const fstat = require('fs')
 
 app.set("view engine", "ejs");
 app.use(express.json());
@@ -20,6 +20,18 @@ app.get('/file/:filename',(req,res)=>{
   console.log(filedata)
  }) 
 })
+app.get('/edit/:filename',(req,res)=>{
+res.render("edit",{nameOfFile:req.params.filename})
+})
+app.post('/edit',(req,res)=>{
+  console.log(req.body)
+  fstat.rename(`./files/${req.body.prev}`,`./files/${req.body.newname}`,(err)=>{
+    
+    if(err) console.log(err.message)
+    
+   res.redirect('/');
+  })
+})
 
 app.post('/create',(req,res)=>{
 //  fstat.writeFile(`./files/${req.body.title.split(' ').join('')}.txt`,req.body.content,(err)=>{
@@ -33,4 +45,6 @@ fstat.writeFile(`./files/${req.body.title.split(' ').join('')}.txt`, req.body.co
 )
   res.redirect('/');}
 )
-app.listen(3000)
+app.listen(3000,()=>{
+  console.log("Server is running on port 3000");
+})
