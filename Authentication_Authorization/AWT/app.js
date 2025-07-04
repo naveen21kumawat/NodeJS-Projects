@@ -9,15 +9,18 @@ app.use(cookieParser());
 
 app.get("/", (req, res) => {
   let token = jwt.sign({ email: "naveen21@gmaail.com" }, "secret");
-  console.log("Token:", token);
-  res.cookie("Token" + token);
-  res.send("Token has been set!");
+  console.log("token:", token);
+  res.cookie("mytoken" , token);
+  res.send("Token has been set!",);
 });
 
 
   app.get("/read",(req,res)=>{
-    console.log(req.cookies.Token);
-
+  //  jwt.verify(req.cookies.mytoken,"secret", (err, decoded) => {
+  //   console.log("Decoded:", decoded);
+  // })
+ let data = jwt.verify(req.cookies.mytoken, "secret");
+ res.send(`Decoded Data: ${JSON.stringify(data)}`);
   })
 
 app.listen(3000, () => {
