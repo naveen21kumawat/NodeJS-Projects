@@ -1,27 +1,14 @@
-import { name } from "ejs";
-import mongoose from "mongoose";
-import Schema from "mongoose";
+const mongoose = require("mongoose");
 
-mongoose.connect("mongodb//127.0.0.1:27017/jwt_auth");
+mongoose.connect("mongodb://127.0.0.1:27017/jwt_auth").then(() => {
+  console.log("Connected to MongoDB");
+});
 
-const userSchema = mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  age: {
-    type: Number,
-    required: true,
-  },
+const userSchema = new mongoose.Schema({
+ name : String,
+  password: String,
+  email : String,
+  age: Number,
   // role: {
   //   type: String,
   //   enum: ['user', 'admin'],
@@ -36,5 +23,4 @@ const userSchema = mongoose.Schema({
   //   default: Date.now,
   // },
 });
-
 module.exports = mongoose.model("user", userSchema);
