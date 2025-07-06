@@ -18,21 +18,47 @@ app.get("/", (req, res) => {
 
 app.post("/create", async (req, res) => {
   let { username, password, email, age } = req.body;
-  
-  bcrypt.genSalt(10, function(err ,salt){
-    bcrypt.hash(password, salt, async function(err, hash) {
-   const user = await userModel.create({
-    username,
-    password: hash,
-    email,
-    age
-  });
-  })
-  console.log(req.body);
-  
-  });
 
-  res.send("User created successfully", );
+  bcrypt.genSalt(10, function (err, salt) {
+    bcrypt.hash(password, salt, async function (err, hash) {
+      const createdUser = await userModel.create({
+        username,
+        password: hash,
+        email,
+        age,
+      });
+      const token = jwt.sign({ email }, "secretyutuytuKey");
+      res.cookie("token", token);
+
+      res.send(createdUser);
+    });
+  });
+});
+
+app.get("/login", async (req, res) => {
+  res.render("login");
+});
+app.post("/login", async (req, res) => {
+  let user = await userModel.findOne({ email: req.body.email });
+  if (!user) return res.status(400).send("User not found");
+  bcrypt.compare(req.body.password, user.password, function (err, result) {
+    if (result){
+      console.log("Yes You Can Login");
+      const token = jwt.sign({ email: user.email},"secretyutuytuKey");
+      res.cookie("token", token);
+      return res.status(200).send("Login successful");
+    }
+    else {
+      return res.status(400).send("Invalid password");
+    }
+
+    console.log("Yes You Can Login");
+  });
+});
+
+app.get("/logout", (req, res) => {
+  res.clearCookie("token");
+  res.send("Logged out successfully");
 });
 
 app.listen(3000, () => {
