@@ -51,7 +51,6 @@ app.post("/login", async (req, res) => {
     else {
       return res.status(400).send("Invalid password");
     }
-
     console.log("Yes You Can Login");
   });
 });
