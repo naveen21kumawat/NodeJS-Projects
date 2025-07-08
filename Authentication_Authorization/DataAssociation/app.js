@@ -10,12 +10,24 @@ app.get("/", (req, res) => {
 });
 app.get("/create",async (req, res) => {
   const user =await userModel.create({
-    username: "JohnDoe",
+    username: "Naveen",
     email: "nk@gmail.com",
     password: "password123",
     posts: [],
   });
-  res.send("User created",user);
+  res.send({user});
+});
+app.get("/post/create",async (req, res) => {
+  let post = await postModel.create({
+  postdata : "Hey Kaise Ho",
+  user: "686d57ebea3024e1905da927"
+
+  })
+  let user = await userModel.findOne({_id : "686d57ebea3024e1905da927"});
+  user.posts.push(post._id)
+  await user.save();
+
+  res.send({post ,user});
 });
 
 app.listen(3000, () => {
