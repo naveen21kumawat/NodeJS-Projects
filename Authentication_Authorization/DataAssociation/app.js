@@ -30,6 +30,12 @@ app.get("/post/create",async (req, res) => {
   res.send({post ,user});
 });
 
+app.get("user/fetch",(req,res)=>{
+  userModel.find().then((users)=>{
+    res.send(users);
+    })
+    
+})
 app.listen(3000, () => {
   console.log("Server is running on port 3000");
 });
