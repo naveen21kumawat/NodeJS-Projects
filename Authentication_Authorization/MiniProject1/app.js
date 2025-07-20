@@ -3,6 +3,7 @@ const app = express();
 
 const cookieParser = require("cookie-parser");
 const userModel = require("./models/user");
+const postModel = require("./models/post");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -15,9 +16,21 @@ app.use(cookieParser());
 app.get("/", (req, res) => {
   res.render("index");
 });
-app.get("/profile", isLoggedIn, (req, res) => {
-  res.send("Login Successfull");
-  console.log("User Data", req.user);
+app.get("/profile", isLoggedIn, async(req, res) => {
+  let user = await userModel.findOne({email : req.user.email}).populate('posts');
+  res.render('profile', {user})
+});
+app.post("/post", isLoggedIn, async(req, res) => {
+  let user = await userModel.findOne({email : req.user.email});
+  let {content} = req.body
+  let post = await postModel.create({
+    user : user._id,
+    content
+  });
+  user.posts.push(post._id);
+  await user.save()
+
+  res.redirect('/profile')
 });
 
 app.get("/login", (req, res) => {
@@ -54,20 +67,20 @@ app.post("/login", async (req, res) => {
       const token = jwt.sign({ email: email, userId: user._id }, "shhhh");
       res.cookie("token", token);
       // res.status(200).send("you can Login");
-      res.redirect("/profile");
+      res.status(200).redirect("/profile");
     } else res.status(500).send("Something went wrong");
   });
 });
 
 app.get("/logout", (req, res) => {
   res.cookie("token", "");
-  // res.redirect("/login");
+  res.redirect("/login");
 });
 
 function isLoggedIn(req, res, next) {
   const token = req.cookies.token;
   if (token === "") {
-    return res.status(401).send("You are not logged in");
+    return res.redirect('/login')
   } else {
     let data = jwt.verify(token, "shhhh");
     req.user = data;

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+  <body>
+    <div class="flex flex-col  justify-center items-center  m-auto min-h-screen bg-zinc-900 text-white border-3">
+      <div class="w-full flex  justify-end">
+        <a class="bg-red-500 rounded-md px-3 py-2 mb-6 inline-block" href="/logout">LogOut</a>
+      </div>
+      <h1 class=""><span class="font-ligth">Hello</span> , <%= user.name %></h1>
+      <h5>You Can Post Hare</h5>
+      <form action="/post" method="post">
+        <textarea placeholder="whats on your mind ?"
+          name="content" class="resize-none p-3 bg-transparent border-2 rounded-md " ></textarea>
+          <input class="px-3 py-2 text-sm bg-blue-800 block w-20 mt-2 rounded-lg "type="submit" value="Add Post">
+      </form>
+
+      <div class=" flex flex-col mt-30 border-2 justify-center items-center">
+        <h3 class="text-zinc-400 mt-5 ">Your Posts</h3>
+        <div class="postcontainer grid lg:grid-cols-3 sm:grid-cols-1 md:grid-cols-2">
+          
+          <% user.posts.reverse().forEach(function(post){ %>
+            
+            
+            <div class="post p-5 border-2 items-center justify-center border-zinc-800">
+            <h3 class="text-blue-500 mb-1"><%= user.name %></h3>
+            <h4 class="text-sm tracking-tight overflow-hidden schroll"><%= post.content %></h4>
+            <div class="btns flex gap-4 mt-5">
+              <a href="" class="text-blue-500">Like</a>
+              <a href="" class="text-zinc-600">Edit</a>
+            </div>
+          </div>
+            
+            <% } ) %>
+          
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
