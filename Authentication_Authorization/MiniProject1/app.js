@@ -47,6 +47,13 @@ app.get("/login", (req, res) => {
   res.render("login");
 });
 
+app.post('/update',async(req,res)=>{
+  let {email} = req.body;
+
+    res.redirect('/profile')
+    
+})
+
 app.post("/create", async (req, res) => {
   let { name, username, email, age, password } = req.body;
   let user = await userModel.findOne({ email });
