@@ -16,43 +16,59 @@ app.use(cookieParser());
 app.get("/", (req, res) => {
   res.render("index");
 });
-app.get("/profile", isLoggedIn, async(req, res) => {
-  let user = await userModel.findOne({email : req.user.email}).populate('posts');
-  res.render('profile', {user})
+app.get("/profile", isLoggedIn, async (req, res) => {
+  let user = await userModel
+    .findOne({ email: req.user.email })
+    .populate("posts");
+  res.render("profile", { user });
 });
 
-app.get("/like/:id", isLoggedIn, async(req, res) => {
-  let post = await postModel.findOne({_id: req.params.id}).populate('user');
-  user = req.user
-  post.likes.push(user.userId)
+app.get("/like/:id", isLoggedIn, async (req, res) => {
+  let post = await postModel.findOne({ _id: req.params.id }).populate("user");
+  user = req.user;
+  if (post.likes.indexOf(user.userId) === -1) {
+    post.likes.push(user.userId);
+  }else{
+    post.likes.splice(post.likes.indexOf(user.userId), 1);
+  }
   await post.save();
-  res.redirect('/profile')
+  res.redirect("/profile");
   // res.render('profile', {user})
 });
 
-app.post("/post", isLoggedIn, async(req, res) => {
-  let user = await userModel.findOne({email : req.user.email});
-  let {content} = req.body
+app.post("/post", isLoggedIn, async (req, res) => {
+  let user = await userModel.findOne({ email: req.user.email });
+  let { content } = req.body;
   let post = await postModel.create({
-    user : user._id,
-    content
+    user: user._id,
+    content,
   });
   user.posts.push(post._id);
-  await user.save()
+  await user.save();
 
-  res.redirect('/profile')
+  res.redirect("/profile");
 });
 
 app.get("/login", (req, res) => {
   res.render("login");
 });
+app.get("/edit/:id", async(req, res) => {
+  let post = await postModel.findOne({ _id: req.params.id }).populate("user");
 
-app.post('/update',async(req,res)=>{
-  let {email} = req.body;
+  res.render("edit", {post});
+});
 
-    res.redirect('/profile')
-    
-})
+app.post("/update/:id", async (req, res) => {
+  let post = await postModel.findOneAndUpdate({ _id: req.params.id }, 
+    { content: req.body.content },
+    )
+  // let id = req.params.id;
+  // let { content } = req.body;
+  // let post = await postModel.findOne({ _id: id });
+  // post.content = content; 
+  await post.save();
+  res.redirect("/profile");
+});
 
 app.post("/create", async (req, res) => {
   let { name, username, email, age, password } = req.body;
@@ -97,7 +113,7 @@ app.get("/logout", (req, res) => {
 function isLoggedIn(req, res, next) {
   const token = req.cookies.token;
   if (token === "") {
-    return res.redirect('/login')
+    return res.redirect("/login");
   } else {
     let data = jwt.verify(token, "shhhh");
     req.user = data;
