@@ -13,6 +13,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extented: true }));
 app.use(cookieParser());
 
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, '/tmp/my-uploads')
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(null, file.fieldname + '-' + uniqueSuffix)
+  }
+})
+
+const upload = multer({ storage: storage })
 app.get("/", (req, res) => {
   res.render("index");
 });
@@ -52,10 +64,20 @@ app.post("/post", isLoggedIn, async (req, res) => {
 app.get("/login", (req, res) => {
   res.render("login");
 });
+app.get("/test", (req, res) => {
+  res.render("test");
+});
 app.get("/edit/:id", async(req, res) => {
   let post = await postModel.findOne({ _id: req.params.id }).populate("user");
 
   res.render("edit", {post});
+});
+
+
+app.post("/upload", (req, res) => {
+  console.log(req.file);
+ 
+  res.send("File uploaded successfully");
 });
 
 app.post("/update/:id", async (req, res) => {
