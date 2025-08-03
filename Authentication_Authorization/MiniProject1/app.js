@@ -33,6 +33,9 @@ const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, uploadDir);
   },
+
+
+  
   filename: function (req, file, cb) {
     crypto.randomBytes(12, (err, buffer) => {
       if (err) return cb(err);
