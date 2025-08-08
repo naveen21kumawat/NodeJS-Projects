@@ -123,8 +123,13 @@ app.post("/post", isLoggedIn, async (req, res) => {
 app.get("/profile/upload", (req, res) => {
   res.render("profileupload");
 });
-app.post("/upload",isLoggedIn,upload.single('image') , (req, res) => {
+app.post("/upload",isLoggedIn,upload.single('image') , async(req, res) => {
   console.log(req.file)
+  const user = await userModel.find({email :req.user.email})
+  console.log("user",user)
+  user.profileImage = req.file.filename
+  await user.save();
+  res.redirect('/profile')
 });
 
 app.get("/edit/:id", async (req, res) => {

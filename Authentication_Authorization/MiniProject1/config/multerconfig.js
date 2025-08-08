@@ -4,7 +4,7 @@ const crypto = require("crypto");
 const fs = require('fs')
 //disk storage setup
 
-const uploadDir = path.join(__dirname, "public", "images", "uploads");
+const uploadDir = path.join(__dirname, "../public", "images", "uploads");
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
