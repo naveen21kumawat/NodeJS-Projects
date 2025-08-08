@@ -10,6 +10,8 @@ const multer = require("multer");
 const crypto = require("crypto");
 const path = require("path");
 const fs = require("fs");
+const upload = require('./config/multerconfig.js')
+
 
 const mongoose = require("mongoose");
 
@@ -25,27 +27,27 @@ app.use(express.static("public"));
 
 
 // Ensure upload folder exists
-const uploadDir = path.join(__dirname, "public", "images", "uploads");
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
+// const uploadDir = path.join(__dirname, "public", "images", "uploads");
+// if (!fs.existsSync(uploadDir)) {
+//   fs.mkdirSync(uploadDir, { recursive: true });
+// }
 
 // Multer storage config
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadDir);
-  },
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, uploadDir);
+//   },
 
-  filename: function (req, file, cb) {
-    crypto.randomBytes(12, (err, buffer) => {
-      if (err) return cb(err);
-      const fn = buffer.toString("hex") + path.extname(file.originalname);
-      cb(null, fn);
-    });
-  },
-});
+//   filename: function (req, file, cb) {
+//     crypto.randomBytes(12, (err, buffer) => {
+//       if (err) return cb(err);
+//       const fn = buffer.toString("hex") + path.extname(file.originalname);
+//       cb(null, fn);
+//     });
+//   },
+// });
 
-const upload = multer({ storage: storage });
+// const upload = multer({ storage: storage });
 
 // Routes
 app.get("/", (req, res) => {
@@ -117,8 +119,12 @@ app.post("/post", isLoggedIn, async (req, res) => {
 
 
 
-app.get("/test", (req, res) => {
-  res.render("test");
+
+app.get("/profile/upload", (req, res) => {
+  res.render("profileupload");
+});
+app.post("/upload",isLoggedIn,upload.single('image') , (req, res) => {
+  console.log(req.file)
 });
 
 app.get("/edit/:id", async (req, res) => {
@@ -126,10 +132,10 @@ app.get("/edit/:id", async (req, res) => {
   res.render("edit", { post });
 });
 
-app.post("/upload", upload.single("image"), (req, res) => {
-  console.log(req.file);
-  res.send("File uploaded successfully");
-});
+// app.post("/upload", upload.single("image"), (req, res) => {
+//   console.log(req.file);
+//   res.send("File uploaded successfully");
+// });
 
 app.post("/update/:id", async (req, res) => {
   let post = await postModel.findOneAndUpdate(

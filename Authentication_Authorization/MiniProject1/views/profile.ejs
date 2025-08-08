@@ -11,6 +11,9 @@
       <div class="w-full flex  justify-end">
         <a class="bg-red-500 rounded-md px-3 py-2 mb-6 inline-block" href="/logout">LogOut</a>
       </div>
+      <div class="w-20 h-20 bg-zinc-800 rounded-full">
+        <img src="/images/uploads/<%= user.profileImage %>" alt="profile image" class="w-full h-full object-cover rounded-full">
+      </div>
       <h1 class=""><span class="font-ligth">Hello</span> , <%= user.name %></h1>
       <h5>You Can Post Hare</h5>
       <form action="/post" method="post">
